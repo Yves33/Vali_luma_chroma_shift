@@ -79,11 +79,11 @@ def decode_vali(srcfile,nframes=20):
     cSpace=nvDec.ColorSpace() if nvDec.ColorSpace()!=nvc.ColorSpace.UNSPEC else nvc.ColorSpace.BT_709
     cRange=nvDec.ColorRange() if nvDec.ColorRange()!=nvc.ColorRange.UDEF else nvc.ColorRange.MPEG
     cc_ctx = nvc.ColorspaceConversionContext(cSpace,cRange)
-    cc_ctx = nvc.ColorspaceConversionContext(nvc.ColorSpace.BT_709,nvc.ColorRange.MPEG)
+    cc_ctx = None
     print(f"#### {cSpace} {cRange} ####")
-    if 0 and cSpace==nvc.ColorSpace.BT_709:
+    if 0 :# and cSpace==nvc.ColorSpace.BT_709:
         nvCvt=TwoPassConverter(nvDec.Format(),nvDec.Width(),nvDec.Height())
-    elif cSpace==nvc.ColorSpace.BT_601:
+    else:# cSpace==nvc.ColorSpace.BT_601:
         nvCvt=OnePassConverter(nvDec.Format(),nvDec.Width(),nvDec.Height())
 
     nvDwn = nvc.PySurfaceDownloader(gpu_id=0)
@@ -154,14 +154,13 @@ def decode_av(srcfile, nframes=20):
 
 
 if __name__=='__main__':
-    srcfile="./hires.mp4"
     nframes=20
-    basename=srcfile.split('.')[-2]
-    os.makedirs(f"./{basename}/",exist_ok=True)
-    if nvc.__maintainer__=="NVIDIA":
-        decode_vpf(srcfile,nframes=nframes)
-    elif nvc.__maintainer__=='Roman Arzumanyan':
-        decode_vali(srcfile,nframes=nframes)
-    #decode_ffmpeg(srcfile,nframes=nframes)
-    #decode_av(srcfile,nframes=nframes)
-    
+    for srcfile in ["./hires.mp4","./lores.mp4"]:
+        basename=srcfile.split('.')[-2]
+        os.makedirs(f"./{basename}/",exist_ok=True)
+        if nvc.__maintainer__=="NVIDIA":
+            decode_vpf(srcfile,nframes=nframes)
+        elif nvc.__maintainer__=='Roman Arzumanyan':
+            decode_vali(srcfile,nframes=nframes)
+        #decode_ffmpeg(srcfile,nframes=nframes)
+        #decode_av(srcfile,nframes=nframes)
